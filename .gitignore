@@ -1,0 +1,4 @@
+.project
+.pydevproject
+src/timeslice/__pycache__
+*.pyc
