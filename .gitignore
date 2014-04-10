@@ -2,3 +2,4 @@
 .pydevproject
 src/timeslice/__pycache__
 *.pyc
+*_old.py
