@@ -5,6 +5,7 @@ Created on Apr 9, 2014
 '''
 from datetime import timedelta, datetime
 from timeslice.TimeSliceStateE import TimeSliceStateE
+from timeslice.Interruptions import Interruptions
 
 class TimeSlice(object):
     '''
@@ -15,10 +16,15 @@ class TimeSlice(object):
         Constructor
         '''
         self._title      = title
+        #self._duration   = timedelta(minutes = duration)
+        # TODO: DEBUG: duration should be minutes.
         self._duration   = timedelta(seconds = duration)
         self._startTime  = None
         self._state      = TimeSliceStateE.inited
-        
+
+        self._external_interruptions = Interruptions()
+        self._internal_interruptions = Interruptions()
+
     def start(self):
         self._update_state()
         if self._state == TimeSliceStateE.inited:
@@ -51,6 +57,18 @@ class TimeSlice(object):
     
     def get_title(self):
         return self._title
+    
+    def inc_external_interruptions(self):
+        self._external_interruptions.inc()
+    
+    def get_external_interruptions(self):
+        return self._external_interruptions.get()
+    
+    def inc_internal_interruptions(self):
+        self._internal_interruptions.inc()
+
+    def get_internal_interruptions(self):
+        return self._internal_interruptions.get()
     
     def is_inited(self):
         return self._update_state() == TimeSliceStateE.inited
