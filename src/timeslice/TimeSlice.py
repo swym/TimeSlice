@@ -5,6 +5,7 @@ Created on Apr 9, 2014
 '''
 from datetime import timedelta, datetime
 from timeslice.TimeSliceStateE import TimeSliceStateE
+from builtins import print
 
 class TimeSlice(object):
     '''
@@ -14,10 +15,10 @@ class TimeSlice(object):
         '''
         Constructor
         '''
-        self.__title = title
+        self.__title      = title
         self.__duration   = timedelta(seconds = duration)
         self.__startTime  = None
-        self.__state = TimeSliceStateE.inited
+        self.__state      = TimeSliceStateE.inited
         
     def start(self):
         self.__updateState()
@@ -39,7 +40,7 @@ class TimeSlice(object):
             #TimeSliceStateE.completed
             #TimeSliceStateE.cancelled
             return timedelta(seconds = 0)
-        
+
     def __updateState(self):
         if self.__state == TimeSliceStateE.running:
             if (self.__startTime + self.__duration) <= datetime.now():
