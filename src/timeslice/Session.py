@@ -5,7 +5,7 @@ Created on Apr 9, 2014
 '''
 from timeslice.TimeSlice import TimeSlice
 from datetime import datetime
-#from timeslice.Interruption import interruption
+#from timeslice.Interruptions import interruption
 from collections import deque
 
 
@@ -90,9 +90,26 @@ class Session(object):
     
     def get_current_time(self):
         return datetime.now()
+
+    def inc_current_timeslice_external_interruptions(self):
+        if len(self._timeslices) > 0:
+            self._timeslices[0].inc_external_interruptions()
+        else: return False
+        
+    def get_current_timeslice_external_interruptions(self):
+        if len(self._timeslices) > 0:
+            return self._timeslices[0].get_external_interruptions()
+        else: return None
+
+    def inc_current_timeslice_internal_interruptions(self):
+        if len(self._timeslices) > 0:
+            self._timeslices[0].inc_internal_interruptions()
+        else: return False
+
+    def get_current_timeslice_internal_interruptions(self):
+        if len(self._timeslices) > 0:
+            return self._timeslices[0].get_internal_interruptions()
+        else: return None   
+
+
     
-#    def incExternalInterruption(self):
-#        self._external_interruption.increment()
-    
-#    def incInternalInterruption(self):
-#        self._internal_interruption.increment()
