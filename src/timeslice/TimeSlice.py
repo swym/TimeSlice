@@ -5,7 +5,6 @@ Created on Apr 9, 2014
 '''
 from datetime import timedelta, datetime
 from timeslice.TimeSliceStateE import TimeSliceStateE
-from builtins import print
 
 class TimeSlice(object):
     '''
@@ -15,60 +14,60 @@ class TimeSlice(object):
         '''
         Constructor
         '''
-        self.__title      = title
-        self.__duration   = timedelta(seconds = duration)
-        self.__startTime  = None
-        self.__state      = TimeSliceStateE.inited
+        self._title      = title
+        self._duration   = timedelta(seconds = duration)
+        self._startTime  = None
+        self._state      = TimeSliceStateE.inited
         
     def start(self):
-        self.__updateState()
-        if self.__state == TimeSliceStateE.inited:
-            self.__startTime = datetime.now()
-            self.__state     = TimeSliceStateE.running
+        self._update_state()
+        if self._state == TimeSliceStateE.inited:
+            self._startTime = datetime.now()
+            self._state     = TimeSliceStateE.running
             
     def cancel(self):
-        self.__updateState()
-        if self.__state == TimeSliceStateE.running:
-            self.__state = TimeSliceStateE.cancelled
+        self._update_state()
+        if self._state == TimeSliceStateE.running:
+            self._state = TimeSliceStateE.cancelled
             
-    def getRemainingTime(self):
-        if self.isInited():
-            return self.__duration
-        elif self.isRunning():
-            return self.__startTime + self.__duration - datetime.now()
+    def get_remaining_time(self):
+        if self.is_inited():
+            return self._duration
+        elif self.is_running():
+            return self._startTime + self._duration - datetime.now()
         else:
             #TimeSliceStateE.completed
             #TimeSliceStateE.cancelled
             return timedelta(seconds = 0)
 
-    def __updateState(self):
-        if self.__state == TimeSliceStateE.running:
-            if (self.__startTime + self.__duration) <= datetime.now():
-                self.__state = TimeSliceStateE.completed
-        return self.__state
+    def _update_state(self):
+        if self._state == TimeSliceStateE.running:
+            if (self._startTime + self._duration) <= datetime.now():
+                self._state = TimeSliceStateE.completed
+        return self._state
     
-    def getDuration(self):
-        return self.__duration
+    def get_duration(self):
+        return self._duration
     
-    def getTitle(self):
-        return self.__title
+    def get_title(self):
+        return self._title
     
-    def isInited(self):
-        return self.__updateState() == TimeSliceStateE.inited
+    def is_inited(self):
+        return self._update_state() == TimeSliceStateE.inited
     
-    def isRunning(self):
-        return self.__updateState() == TimeSliceStateE.running
+    def is_running(self):
+        return self._update_state() == TimeSliceStateE.running
     
-    def isCompleted(self):
-        return self.__updateState() == TimeSliceStateE.completed
+    def is_completed(self):
+        return self._update_state() == TimeSliceStateE.completed
     
-    def isCancelled(self):
-        return self.__updateState() == TimeSliceStateE.cancelled
+    def is_cancelled(self):
+        return self._update_state() == TimeSliceStateE.cancelled
     
     def __str__(self, *args, **kwargs):
-        return ("title:"  + str(self.__title) +
-                ",dur:"   + str(self.__duration) +
-                ",state:" + str(self.__state))
+        return ("title:"  + str(self._title) +
+                ",dur:"   + str(self._duration) +
+                ",state:" + str(self._state))
        
     def __repr__(self, *args, **kwargs):
         return self.__str__()
