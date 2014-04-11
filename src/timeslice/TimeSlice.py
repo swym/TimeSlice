@@ -28,7 +28,7 @@ class TimeSlice(object):
     def start(self):
         self._update_state()
         if self._state == TimeSliceStateE.inited:
-            self._startTime = datetime.now()
+            self._startTime = self._my_now()
             self._state     = TimeSliceStateE.running
             
     def cancel(self):
@@ -40,7 +40,7 @@ class TimeSlice(object):
         if self.is_inited():
             return self._duration
         elif self.is_running():
-            return self._startTime + self._duration - datetime.now()
+            return self._startTime + self._duration - self._my_now()
         else:
             #TimeSliceStateE.completed
             #TimeSliceStateE.cancelled
@@ -48,7 +48,7 @@ class TimeSlice(object):
 
     def _update_state(self):
         if self._state == TimeSliceStateE.running:
-            if (self._startTime + self._duration) <= datetime.now():
+            if (self._startTime + self._duration) <= self._my_now():
                 self._state = TimeSliceStateE.completed
         return self._state
     
@@ -58,14 +58,20 @@ class TimeSlice(object):
     def get_title(self):
         return self._title
     
+    def _my_now(self):
+        now = datetime.now()
+        return timedelta(hours = now.hour, minutes =  now.minute, seconds = now.second)
+
     def inc_external_interruptions(self):
-        self._external_interruptions.inc()
-    
+        if self._state == TimeSliceStateE.running:
+            self._external_interruptions.inc()
+ 
     def get_external_interruptions(self):
         return self._external_interruptions.get()
     
     def inc_internal_interruptions(self):
-        self._internal_interruptions.inc()
+        if self._state == TimeSliceStateE.running:
+            self._internal_interruptions.inc()
 
     def get_internal_interruptions(self):
         return self._internal_interruptions.get()
