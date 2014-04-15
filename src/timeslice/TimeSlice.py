@@ -31,14 +31,14 @@ class TimeSlice(object):
         if self._state == TimeSliceStateE.inited:
             self._startTime = self._my_now()
             self._state     = TimeSliceStateE.running
-            self._notify('Time Slice started!', '','')
+            self._notify("TimeSlice", "'" + self._title + "' started!","Be productive!")
 
             
     def cancel(self):
         self._update_state()
         if self._state == TimeSliceStateE.running:
             self._state = TimeSliceStateE.cancelled
-            self._notify('Time Slice canceled!', '','')
+            self._notify("TimeSlice", "'" + self._title  + "' canceled!","Next time you have more luck...")
             
     def get_remaining_time(self):
         if self.is_inited():
@@ -54,7 +54,7 @@ class TimeSlice(object):
         if self._state == TimeSliceStateE.running:
             if (self._startTime + self._duration) <= self._my_now():
                 self._state = TimeSliceStateE.completed
-                self._notify('Time Slice completed!', '','')
+                self._notify("TimeSlice", "'" + self._title + "' completed","Yey you made it.")
         return self._state
     
     def get_duration(self):
