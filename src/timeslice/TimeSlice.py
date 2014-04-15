@@ -6,6 +6,7 @@ Created on Apr 9, 2014
 from datetime import timedelta, datetime
 from timeslice.TimeSliceStateE import TimeSliceStateE
 from timeslice.Interruptions import Interruptions
+from os.path import os
 
 class TimeSlice(object):
     '''
@@ -30,11 +31,14 @@ class TimeSlice(object):
         if self._state == TimeSliceStateE.inited:
             self._startTime = self._my_now()
             self._state     = TimeSliceStateE.running
+            self._notify('Time Slice started!', '','')
+
             
     def cancel(self):
         self._update_state()
         if self._state == TimeSliceStateE.running:
             self._state = TimeSliceStateE.cancelled
+            self._notify('Time Slice canceled!', '','')
             
     def get_remaining_time(self):
         if self.is_inited():
@@ -50,6 +54,7 @@ class TimeSlice(object):
         if self._state == TimeSliceStateE.running:
             if (self._startTime + self._duration) <= self._my_now():
                 self._state = TimeSliceStateE.completed
+                self._notify('Time Slice completed!', '','')
         return self._state
     
     def get_duration(self):
@@ -87,6 +92,15 @@ class TimeSlice(object):
     
     def is_cancelled(self):
         return self._update_state() == TimeSliceStateE.cancelled
+    
+    def _notify(self, title, subtitle, message):
+        # dirty hack move implementation to ui layer
+        # http://stackoverflow.com/questions/17651017/python-post-osx-notification
+        t = '-title {!r}'.format(title)
+        s = '-subtitle {!r}'.format(subtitle)
+        m = '-message {!r}'.format(message)
+        os.system('terminal-notifier {}'.format(' '.join([m, t, s])))
+    
     
     def __str__(self, *args, **kwargs):
         return ("title:"  + str(self._title) +
