@@ -161,7 +161,7 @@ class UserInterface(object):
 
             self._screen.addstr(1, 2, "Title: " + ts_title)
             self._screen.addstr(2, 2, "State: " + ts_state)
-            self._screen.addstr(3, 2, "duration: " + ts_duration)
+            #self._screen.addstr(3, 2, "duration: " + ts_duration)
             self._add_big_numbers(4, 2, ts_duration.partition('.')[0])
             self._screen.addstr(10, 2, "Interruptions:")
             self._screen.addstr(11, 4, "internal: " + str(self._session.get_current_timeslice_internal_interruptions()))
