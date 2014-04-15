@@ -5,7 +5,6 @@ Created on Apr 10, 2014
 '''
 from timeslice.Session import Session
 import curses
-from _curses import flash
 
 class UserInterface(object):
     '''
@@ -181,7 +180,7 @@ class UserInterface(object):
                 self._screen.addstr(13, 4, "n - next")
 
             self._screen.addstr(18, 4, "q - quit session")
-            self._screen.addstr(19, 4,"") # Cursor for user input
+            self._screen.addstr(19, 4, "") # Cursor for user input
         else:
             self._screen.addstr(2, 4, "session queue empty - good job! :-)")
             self._screen.addstr(5, 4, "q - quit session")
