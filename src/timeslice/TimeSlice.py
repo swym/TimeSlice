@@ -19,7 +19,7 @@ class TimeSlice(object):
         self._title      = title
         #self._duration   = timedelta(minutes = duration)
         # TODO: DEBUG: duration should be minutes.
-        self._duration   = timedelta(seconds = duration)
+        self._duration   = timedelta(minutes = duration)
         self._startTime  = None
         self._state      = TimeSliceStateE.inited
 

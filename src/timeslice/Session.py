@@ -21,7 +21,7 @@ class Session(object):
         '''
         self._timeslices = deque()
         self._timeslices.append(TimeSlice(title, durationActive))
-        self._timeslices.append(TimeSlice("pause", durationPause))
+        self._timeslices.append(TimeSlice("Pause", durationPause))
 
 #        self._external_interruption = interruption()
 #        self._internal_interruption = interruption()
