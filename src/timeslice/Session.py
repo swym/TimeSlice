@@ -7,9 +7,9 @@ from timeslice.TimeSlice import TimeSlice
 from datetime import datetime
 #from timeslice.Interruptions import interruption
 from collections import deque
+from src.util.observer import Observer
 
-
-class Session(object):
+class Session(Observer):
     '''
     classdocs
     '''
@@ -20,7 +20,7 @@ class Session(object):
         Constructor
         '''
         self._timeslices = deque()
-        self._timeslices.append(TimeSlice(title, durationActive))
+        self._timeslices.append(TimeSlice("title", durationActive))
         self._timeslices.append(TimeSlice("Pause", durationPause))
 
 #        self._external_interruption = interruption()

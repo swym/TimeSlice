@@ -7,8 +7,11 @@ from datetime import timedelta, datetime
 from timeslice.TimeSliceStateE import TimeSliceStateE
 from timeslice.Interruptions import Interruptions
 from os.path import os
+from threading import Thread
+from src.util.observer import Subject
 
-class TimeSlice(object):
+
+class TimeSlice(Thread, Subject):
     '''
     classdocs
     '''
