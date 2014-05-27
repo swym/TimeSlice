@@ -12,11 +12,11 @@ class UserInterface(object):
     '''
 
 
-    def __init__(self, title, durationActive, durationPause):
+    def __init__(self):
         '''
         Constructor
         '''
-        self._session = Session(title, durationActive, durationPause)
+        self._session = Session()
         self._screen = None
         self._run_screen = True
         self._big_numbers_dict = None
