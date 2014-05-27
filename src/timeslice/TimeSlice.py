@@ -8,6 +8,7 @@ from timeslice.TimeSliceStateE import TimeSliceStateE
 from timeslice.Interruptions import Interruptions
 from threading import Thread
 from util.observer.Subject import Subject
+from time import sleep
 
 class TimeSlice(Thread, Subject):
 
@@ -39,16 +40,13 @@ class TimeSlice(Thread, Subject):
         if self.is_inited():
             self._startTime = self._my_now()
             self._state     = TimeSliceStateE.running
-            self.notifyObservers("Be productive!")
+            self.notifyObservers(self._state)
 
             self._update_state()    
             while self.is_running():
                 self._update_state()
 
-            if self.is_completed():
-                self.notifyObservers("completed!")
-            elif self.is_cancelled():
-                self.notifyObservers("canceled!")
+            self.notifyObservers(self._state)
 
     def cancel(self):
         if self._state == TimeSliceStateE.running:
