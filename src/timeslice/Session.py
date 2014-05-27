@@ -119,9 +119,14 @@ class Session(Observer):
         else: return None   
 
     def update(self, subject, param):
-        if(param == TimeSliceStateE.running):
-            self._hookup.hookup_start(subject)
-        elif(param == TimeSliceStateE.completed):
-            self._hookup.hookup_complete(subject)
-        elif(param == TimeSliceStateE.cancelled):
-            self._hookup.hookup_cancelled(subject)
+        
+        if isinstance(subject, TimeSlice):
+            if(param == TimeSliceStateE.running):
+                self._hookup.hookup_start(subject)
+            elif(param == TimeSliceStateE.completed):
+                self._hookup.hookup_complete(subject)
+            elif(param == TimeSliceStateE.cancelled):
+                self._hookup.hookup_cancelled(subject)
+            elif(param == "interrupted"):
+                self._hookup.hookup_interrupted(subject)
+                

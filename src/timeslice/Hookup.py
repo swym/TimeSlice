@@ -18,7 +18,7 @@ class Hookup(object):
         '''
         homedir = os.path.expanduser("~")
         logging.basicConfig(filename=homedir + '/.timeslice/timeslice.log',
-                            level=logging.INFO,
+                            level=logging.DEBUG,
                             format='%(asctime)s | %(levelname)s | %(message)s')
     
     def hookup_start(self, timeslice):
@@ -26,8 +26,8 @@ class Hookup(object):
                                "'" + str(timeslice.get_duration()) + "'",
                                'Be productive! :)')
         
-        logmsg = "timeslice '" + timeslice.get_title() + \
-                 "' (" + str(timeslice.get_duration()) + ") started."
+        logmsg = "START | timeslice '" + timeslice.get_title() + \
+                 "' (" + str(timeslice.get_duration()) + ")"
         logging.info(logmsg)
 
     def hookup_complete(self, timeslice):
@@ -35,8 +35,10 @@ class Hookup(object):
                                "'" + timeslice.get_title() + "'",
                                'Yay you made it! :D')
         
-        logmsg = "timeslice '" + timeslice.get_title() + \
-                 "' (" + str(timeslice.get_duration()) + ") completed."
+        logmsg = "COMPLETED | timeslice '" + timeslice.get_title() + \
+                 "' (" + str(timeslice.get_duration()) + ") ints: (ext: " + \
+                 str(timeslice.get_external_interruptions()) + " int: " + \
+                 str(timeslice.get_internal_interruptions()) + ")"
         logging.info(logmsg)
         
     def hookup_cancelled(self, timeslice):
@@ -44,9 +46,20 @@ class Hookup(object):
                                "'" + timeslice.get_title() + "'",
                                'Aww! :( Next time you have more luck.')
         
-        logmsg = "timeslice '" + timeslice.get_title() + \
-                 "' (" + str(timeslice.get_duration()) + ") cancelled."
+        logmsg = "CANCELLED | timeslice '" + timeslice.get_title() + \
+                 "' (" + str(timeslice.get_duration()) + ") ints: (ext: " + \
+                 str(timeslice.get_external_interruptions()) + " int: " + \
+                 str(timeslice.get_internal_interruptions()) + ") " + \
+                 "time left: " + str(timeslice.get_remaining_time())
         logging.info(logmsg)
+        
+    def hookup_interrupted(self, timeslice):
+        logmsg = "INTERRUPT | timeslice '" + timeslice.get_title() + \
+                 "' (" + str(timeslice.get_duration()) + ") ints: (ext: " + \
+                 str(timeslice.get_external_interruptions()) + " int: " + \
+                 str(timeslice.get_internal_interruptions()) + ") " + \
+                 "time left: " + str(timeslice.get_remaining_time())
+        logging.debug(logmsg)
 
     
     def _osx_notification(self, title, subtitle, message):
