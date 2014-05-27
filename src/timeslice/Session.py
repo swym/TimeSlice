@@ -7,7 +7,9 @@ from timeslice.TimeSlice import TimeSlice
 from datetime import datetime
 #from timeslice.Interruptions import interruption
 from collections import deque
-from src.util.observer import Observer
+from util.observer.Observer import Observer
+from os.path import os
+
 
 class Session(Observer):
     '''
@@ -15,13 +17,19 @@ class Session(Observer):
     '''
 
 
-    def __init__(self, title, durationActive = 25, durationPause = 5):
+    def __init__(self):
         '''
         Constructor
         '''
         self._timeslices = deque()
-        self._timeslices.append(TimeSlice("title", durationActive))
-        self._timeslices.append(TimeSlice("Pause", durationPause))
+        
+        ts = TimeSlice("title", 25, 's')
+        ts.attachObserver(self)
+        self._timeslices.append(ts)
+
+        ts = TimeSlice("pause", 5, 's')
+        ts.attachObserver(self)        
+        self._timeslices.append(ts)
 
 #        self._external_interruption = interruption()
 #        self._internal_interruption = interruption()
@@ -111,5 +119,16 @@ class Session(Observer):
             return self._timeslices[0].get_internal_interruptions()
         else: return None   
 
+    def update(self, subject, param):
+        if(param):
+            self._notify("TimeSlice", subject.get_title(), "'" +  param + "'")
 
+    def _notify(self, title, subtitle, message):
+        # dirty hack move implementation to ui layer
+        # http://stackoverflow.com/questions/17651017/python-post-osx-notification
+        t = '-title {!r}'.format(title)
+        s = '-subtitle {!r}'.format(subtitle)
+        m = '-message {!r}'.format(message)
+        print(subtitle, message)
+        os.system('/usr/local/bin/terminal-notifier {}'.format(' '.join([m, t, s])))
     
