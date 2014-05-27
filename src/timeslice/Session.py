@@ -8,7 +8,8 @@ from datetime import datetime
 #from timeslice.Interruptions import interruption
 from collections import deque
 from util.observer.Observer import Observer
-from os.path import os
+from timeslice.TimeSliceStateE import TimeSliceStateE
+from timeslice.Hookup import Hookup
 
 
 class Session(Observer):
@@ -16,23 +17,21 @@ class Session(Observer):
     classdocs
     '''
 
-
     def __init__(self):
         '''
         Constructor
         '''
         self._timeslices = deque()
         
-        ts = TimeSlice("title", 25, 's')
+        ts = TimeSlice("productive", 25, 's')
         ts.attachObserver(self)
         self._timeslices.append(ts)
 
         ts = TimeSlice("pause", 5, 's')
         ts.attachObserver(self)        
         self._timeslices.append(ts)
-
-#        self._external_interruption = interruption()
-#        self._internal_interruption = interruption()
+        
+        self._hookup = Hookup()
 
 
     def start_current_timeslice(self):
@@ -120,15 +119,14 @@ class Session(Observer):
         else: return None   
 
     def update(self, subject, param):
-        if(param):
-            self._notify("TimeSlice", subject.get_title(), "'" +  param + "'")
-
-    def _notify(self, title, subtitle, message):
-        # dirty hack move implementation to ui layer
-        # http://stackoverflow.com/questions/17651017/python-post-osx-notification
-        t = '-title {!r}'.format(title)
-        s = '-subtitle {!r}'.format(subtitle)
-        m = '-message {!r}'.format(message)
-        print(subtitle, message)
-        os.system('/usr/local/bin/terminal-notifier {}'.format(' '.join([m, t, s])))
-    
+        
+        if isinstance(subject, TimeSlice):
+            if(param == TimeSliceStateE.running):
+                self._hookup.hookup_start(subject)
+            elif(param == TimeSliceStateE.completed):
+                self._hookup.hookup_complete(subject)
+            elif(param == TimeSliceStateE.cancelled):
+                self._hookup.hookup_cancelled(subject)
+            elif(param == "interrupted"):
+                self._hookup.hookup_interrupted(subject)
+                
