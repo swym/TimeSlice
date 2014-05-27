@@ -120,8 +120,8 @@ class Session(Observer):
 
     def update(self, subject, param):
         if(param == TimeSliceStateE.running):
-            self._hookup.hookup_start(subject.get_title())
+            self._hookup.hookup_start(subject)
         elif(param == TimeSliceStateE.completed):
-            self._hookup.hookup_complete(subject.get_title())
+            self._hookup.hookup_complete(subject)
         elif(param == TimeSliceStateE.cancelled):
-            self._hookup.hookup_cancelled(subject.get_title())
+            self._hookup.hookup_cancelled(subject)

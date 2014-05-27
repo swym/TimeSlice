@@ -4,6 +4,7 @@ Created on May 27, 2014
 @author: alexandermertens
 '''
 from os.path import os
+import logging
 
 class Hookup(object):
     '''
@@ -15,16 +16,37 @@ class Hookup(object):
         '''
         Constructor
         '''
-        pass
+        homedir = os.path.expanduser("~")
+        logging.basicConfig(filename=homedir + '/.timeslice/timeslice.log',
+                            level=logging.INFO,
+                            format='%(asctime)s | %(levelname)s | %(message)s')
     
-    def hookup_start(self, message):
-        self._osx_notification('TimeSilce.py', "'" + message + "'", 'Be productive! :)')
-
-    def hookup_complete(self, message):
-        self._osx_notification('TimeSilce.py', "'" + message + "'", 'Yay you made it! :D')
+    def hookup_start(self, timeslice):
+        self._osx_notification('TimeSilce.py',
+                               "'" + str(timeslice.get_duration()) + "'",
+                               'Be productive! :)')
         
-    def hookup_cancelled(self, message):
-        self._osx_notification('TimeSilce.py', "'" + message + "'", 'Aww! :( Next time you have more luck.')
+        logmsg = "timeslice '" + timeslice.get_title() + \
+                 "' (" + str(timeslice.get_duration()) + ") started."
+        logging.info(logmsg)
+
+    def hookup_complete(self, timeslice):
+        self._osx_notification('TimeSilce.py',
+                               "'" + timeslice.get_title() + "'",
+                               'Yay you made it! :D')
+        
+        logmsg = "timeslice '" + timeslice.get_title() + \
+                 "' (" + str(timeslice.get_duration()) + ") completed."
+        logging.info(logmsg)
+        
+    def hookup_cancelled(self, timeslice):
+        self._osx_notification('TimeSilce.py',
+                               "'" + timeslice.get_title() + "'",
+                               'Aww! :( Next time you have more luck.')
+        
+        logmsg = "timeslice '" + timeslice.get_title() + \
+                 "' (" + str(timeslice.get_duration()) + ") cancelled."
+        logging.info(logmsg)
 
     
     def _osx_notification(self, title, subtitle, message):
