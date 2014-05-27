@@ -18,12 +18,12 @@ class Subject(object):
         self._observers = deque()
 
     
-    def attach(self, observer):
+    def attachObserver(self, observer):
         self._observers.append(observer)
         
-    def detach(self, observer):
+    def detachObserver(self, observer):
         self._observers.remove(observer)
 
-    def notify_observers(self, param = None):
+    def notifyObservers(self, param = None):
         for obs in self._observers:
             obs.update(self, param)
