@@ -8,7 +8,6 @@ from timeslice.TimeSliceStateE import TimeSliceStateE
 from timeslice.Interruptions import Interruptions
 from threading import Thread
 from util.observer.Subject import Subject
-from time import sleep
 
 class TimeSlice(Thread, Subject):
 
@@ -36,7 +35,7 @@ class TimeSlice(Thread, Subject):
         self._external_interruptions = Interruptions()
         self._internal_interruptions = Interruptions()
 
-    def run(self):
+    def run(self):  
         if self.is_inited():
             self._startTime = self._my_now()
             self._state     = TimeSliceStateE.running
@@ -70,7 +69,7 @@ class TimeSlice(Thread, Subject):
 
     def _my_now(self):
         now = datetime.now()
-        return timedelta(hours = now.hour, minutes =  now.minute, seconds = now.second)
+        return timedelta(hours = now.hour, minutes = now.minute, seconds = now.second)
  
     def get_duration(self):
         return self._duration
@@ -82,6 +81,7 @@ class TimeSlice(Thread, Subject):
     def inc_external_interruptions(self):
         if self._state == TimeSliceStateE.running:
             self._external_interruptions.inc()
+            self.notifyObservers("interrupted")
  
     def get_external_interruptions(self):
         return self._external_interruptions.get()
@@ -89,6 +89,7 @@ class TimeSlice(Thread, Subject):
     def inc_internal_interruptions(self):
         if self._state == TimeSliceStateE.running:
             self._internal_interruptions.inc()
+            self.notifyObservers("interrupted")
 
     def get_internal_interruptions(self):
         return self._internal_interruptions.get()
@@ -107,9 +108,9 @@ class TimeSlice(Thread, Subject):
     
     
     def __str__(self, *args, **kwargs):
-        return ("title:"  + str(self._title) +
-                ",dur:"   + str(self._duration) +
-                ",state:" + str(self._state))
+        return ("title: "  + str(self._title) +
+                ", dur: "   + str(self._duration) +
+                ", state: " + str(self._state))
        
     def __repr__(self, *args, **kwargs):
         return self.__str__()
