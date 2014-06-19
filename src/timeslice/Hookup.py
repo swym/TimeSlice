@@ -61,7 +61,10 @@ class Hookup(object):
                  "time left: " + str(timeslice.get_remaining_time())
         logging.debug(logmsg)
 
-    
+    def hookup_watchdog_fired(self):
+        self._osx_notification('TimeSilce.py', '',
+                               'Watchdog fired! - come back to me! ;-)')
+
     def _osx_notification(self, title, subtitle, message):
         # http://stackoverflow.com/questions/17651017/python-post-osx-notification
         t = '-title {!r}'.format(title)

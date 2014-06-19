@@ -198,6 +198,7 @@ class UserInterface(object):
         elif c == ord("n"):
             self._session.next_timeslice()
         elif c == ord("q"):
+            self._session.shutdown()
             self._run_screen = False
             
     def _add_big_numbers(self, row, col, number_string):
