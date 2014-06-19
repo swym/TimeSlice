@@ -12,11 +12,11 @@ class UserInterface(object):
     '''
 
 
-    def __init__(self, title, durationActive, durationPause):
+    def __init__(self):
         '''
         Constructor
         '''
-        self._session = Session(title, durationActive, durationPause)
+        self._session = Session()
         self._screen = None
         self._run_screen = True
         self._big_numbers_dict = None
@@ -198,6 +198,7 @@ class UserInterface(object):
         elif c == ord("n"):
             self._session.next_timeslice()
         elif c == ord("q"):
+            self._session.shutdown()
             self._run_screen = False
             
     def _add_big_numbers(self, row, col, number_string):

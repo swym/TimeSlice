@@ -7,24 +7,36 @@ from timeslice.TimeSlice import TimeSlice
 from datetime import datetime
 #from timeslice.Interruptions import interruption
 from collections import deque
+from util.observer.Observer import Observer
+from timeslice.TimeSliceStateE import TimeSliceStateE
+from timeslice.Hookup import Hookup
+from timeslice.Watchdog import Watchdog
 
 
-class Session(object):
+class Session(Observer):
     '''
     classdocs
     '''
 
-
-    def __init__(self, title, durationActive = 25, durationPause = 5):
+    def __init__(self):
         '''
         Constructor
         '''
         self._timeslices = deque()
-        self._timeslices.append(TimeSlice(title, durationActive))
-        self._timeslices.append(TimeSlice("Pause", durationPause))
+        
+        ts = TimeSlice("productive", 25, 's')
+        ts.attachObserver(self)
+        self._timeslices.append(ts)
 
-#        self._external_interruption = interruption()
-#        self._internal_interruption = interruption()
+        ts = TimeSlice("pause", 5, 's')
+        ts.attachObserver(self)        
+        self._timeslices.append(ts)
+        
+        self._hookup = Hookup()
+        
+        self._watchdog = Watchdog(60)
+        self._watchdog.attachObserver(self)
+        self._watchdog.start()
 
 
     def start_current_timeslice(self):
@@ -111,5 +123,27 @@ class Session(object):
             return self._timeslices[0].get_internal_interruptions()
         else: return None   
 
+    def shutdown(self):
+        self._watchdog.stop()
+        for ts in self._timeslices:
+            ts.cancel()
 
-    
+    def update(self, subject, param):
+        
+        if isinstance(subject, TimeSlice):
+            if(param == TimeSliceStateE.running):
+                self._hookup.hookup_start(subject)
+            elif(param == TimeSliceStateE.completed):
+                self._hookup.hookup_complete(subject)
+            elif(param == TimeSliceStateE.cancelled):
+                self._hookup.hookup_cancelled(subject)
+            elif(param == "interrupted"):
+                self._hookup.hookup_interrupted(subject)
+            
+            self._watchdog.reset()
+
+        if isinstance(subject, Watchdog):
+            if param == "fired":
+                if self.get_current_timeslice() == None or \
+                   not self.is_current_timeslice_running():
+                    self._hookup.hookup_watchdog_fired()
