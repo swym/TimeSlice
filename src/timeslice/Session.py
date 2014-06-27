@@ -24,11 +24,11 @@ class Session(Observer):
         '''
         self._timeslices = deque()
         
-        ts = TimeSlice("productive", 25, 's')
+        ts = TimeSlice("productive", 25, 'm')
         ts.attachObserver(self)
         self._timeslices.append(ts)
 
-        ts = TimeSlice("pause", 5, 's')
+        ts = TimeSlice("pause", 5, 'm')
         ts.attachObserver(self)        
         self._timeslices.append(ts)
         
